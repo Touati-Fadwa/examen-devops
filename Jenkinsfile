@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     // Construire l'image Docker
-                    sh 'docker build -t touatifadwa/your-image-name .'
+                    sh 'docker build -t touatifadwa/image-spring .'
                 }
             }
         }
