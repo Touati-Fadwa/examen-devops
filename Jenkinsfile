@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_USERNAME = 'ton_nom_utilisateur_dockerhub'  // Remplace par ton nom d'utilisateur Docker Hub
-        DOCKER_HUB_PASSWORD = credentials('docker-hub-password')  // Assurez-vous de créer une credential Jenkins pour le mot de passe Docker Hub
+        DOCKER_HUB_USERNAME = 'touatifadwa'  // Remplace par ton nom d'utilisateur Docker Hub
+        DOCKER_HUB_PASSWORD = credentials('foufou53550880')  // Assurez-vous de créer une credential Jenkins pour le mot de passe Docker Hub
         DOCKER_IMAGE_NAME = 'ton_image_springboot'  // Remplace par le nom de ton image Docker
     }
 
