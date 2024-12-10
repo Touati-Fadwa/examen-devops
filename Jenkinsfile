@@ -32,7 +32,7 @@ pipeline {
                 script {
                     // Pousser l'image Docker vers Docker Hub
                     withDockerRegistry([credentialsId: 'docker-hub-password', url: 'https://index.docker.io/v1/']) {
-                        sh 'docker push touatifadwa/your-image-name'
+                        sh 'docker push touatifadwa/image-spring'
                     }
                 }
             }
