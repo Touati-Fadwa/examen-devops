@@ -1,66 +1,41 @@
 pipeline {
     agent any
-
     environment {
-        DOCKER_HUB_USERNAME = 'touatifadwa'  // Remplace par ton nom d'utilisateur Docker Hub
-        DOCKER_HUB_PASSWORD = credentials('foufou53550880')  // Assurez-vous de créer une credential Jenkins pour le mot de passe Docker Hub
-        DOCKER_IMAGE_NAME = 'ton_image_springboot'  // Remplace par le nom de ton image Docker
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-password')  // Remplace 'docker-hub-password' par l'ID des credentials
     }
-
-    triggers {
-        pollSCM('H/5 * * * *')  // Scrute le repository GitHub toutes les 5 minutes
-    }
-
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/ton_utilisateur/ton_repertoire_springboot.git'  // Remplace par l'URL de ton repository GitHub
+                checkout scm
             }
         }
-
-        stage('Build Project') {
-            steps {
-                script {
-                    // Effectue le build Maven
-                    sh 'mvn clean install -DskipTests'
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Build & Docker Image') {
             steps {
                 script {
                     // Construire l'image Docker
-                    sh 'docker build -t $DOCKER_HUB_USERNAME/$DOCKER_IMAGE_NAME .'
+                    sh 'docker build -t touatifadwa/your-image-name .'
                 }
             }
         }
-
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    // Se connecter à Docker Hub
-                    sh "echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin"
+                    // Connexion à Docker Hub avec les credentials
+                    withDockerRegistry([credentialsId: 'docker-hub-password', url: 'https://index.docker.io/v1/']) {
+                        echo "Connexion à Docker Hub réussie"
+                    }
                 }
             }
         }
-
-        stage('Push Docker Image') {
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Pousser l'image vers Docker Hub
-                    sh 'docker push $DOCKER_HUB_USERNAME/$DOCKER_IMAGE_NAME'
+                    // Pousser l'image Docker vers Docker Hub
+                    withDockerRegistry([credentialsId: 'docker-hub-password', url: 'https://index.docker.io/v1/']) {
+                        sh 'docker push touatifadwa/your-image-name'
+                    }
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Le pipeline s\'est exécuté avec succès!'
-        }
-        failure {
-            echo 'Une erreur s\'est produite pendant l\'exécution du pipeline.'
         }
     }
 }
